@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mana Reports - Frontend</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Roboto;max-width:900px;margin:30px auto;padding:20px;}
+    label{display:block;margin-top:10px;font-weight:600}
+    input,select,button{padding:8px;margin-top:6px;width:100%;box-sizing:border-box}
+    .row{display:flex;gap:10px}
+    .row > *{flex:1}
+    table{width:100%;border-collapse:collapse;margin-top:16px}
+    th,td{border:1px solid #ddd;padding:8px;text-align:left}
+    th{background:#f4f4f4}
+    .hidden{display:none}
+    .notice{background:#eef;padding:10px;border:1px solid #cce;margin-top:12px}
+  </style>
+</head>
+<body>
+  <h1>Mana Reports — Frontend</h1>
+  <p>Unique ID తో లాగిన్ చేసి రిపోర్ట్ చూడండి.</p>
+
+  <div id="loginBox">
+    <label>Unique ID (Person / Report ID)</label>
+    <input id="uid" placeholder="ఉదాహরণ: P1234" />
+
+    <div class="row">
+      <div>
+        <label>District</label>
+        <select id="district">
+          <option value="">-- ఎంచుకోండి --</option>
+          <option value="Srikakulam">Srikakulam</option>
+          <option value="Vizianagaram">Vizianagaram</option>
+          <option value="Visakhapatnam">Visakhapatnam</option>
+          <option value="Khammam">Khammam</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div>
+        <label>Mandal</label>
+        <input id="mandal" placeholder="Mandal (optional)" />
+      </div>
+    </div>
+
+    <button id="btnLogin" style="margin-top:12px">Login / Fetch Report</button>
+    <div id="msg" class="notice hidden"></div>
+  </div>
+
+  <div id="reportArea" class="hidden">
+    <h2>Report for <span id="rid"></span></h2>
+    <p><strong>District:</strong> <span id="rdistrict"></span> &nbsp; <strong>Mandal:</strong> <span id="rmandal"></span></p>
+
+    <table id="tbl">
+      <thead>
+        <tr><th>#</th><th>Name</th><th>Status</th><th>Time</th><th>Date</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <button id="btnBack" style="margin-top:12px">Back</button>
+  </div>
+
+  <script>
+    const btn = document.getElementById('btnLogin');
+    const msg = document.getElementById('msg');
+    const reportArea = document.getElementById('reportArea');
+    const loginBox = document.getElementById('loginBox');
+
+    btn.addEventListener('click', async () => {
+      const uid = document.getElementById('uid').value.trim();
+      const district = document.getElementById('district').value;
+      const mandal = document.getElementById('mandal').value.trim();
+
+      if (!uid) { showMsg('దయచేసి Unique ID పెట్టండి'); return; }
+      if (!district) { showMsg('దయచేసి District ఎంచుకోండి'); return; }
+
+      showMsg('Loading...');
+
+      // ===== REPLACE WITH YOUR RENDER URL =====
+      const apiUrl = `https://manareports-demo.onrender.com/api/report?uid=${encodeURIComponent(uid)}&district=${encodeURIComponent(district)}&mandal=${encodeURIComponent(mandal)}`;
+
+      try {
+        const resp = await fetch(apiUrl);
+        if (resp.ok) {
+          const data = await resp.json();
+          showReport(uid, district, mandal, data);
+          return;
+        }
+      } catch (e) { /* ignore and fallback */ }
+
+      // fallback mock
+      const mock = {
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString(),
+        rows: [
+          { name: 'Raja', status: 'Present', time: '09:02 AM', date: '2025-09-12' },
+          { name: 'Sita', status: 'Absent', time: '-', date: '2025-09-12' },
+          { name: 'Krishna', status: 'Present', time: '09:05 AM', date: '2025-09-12' }
+        ]
+      };
+      showReport(uid, district, mandal, mock);
+    });
+
+    function showMsg(t) {
+      msg.textContent = t; msg.classList.remove('hidden');
+    }
+
+    function showReport(uid, district, mandal, data) {
+      loginBox.classList.add('hidden'); reportArea.classList.remove('hidden');
+      document.getElementById('rid').textContent = uid;
+      document.getElementById('rdistrict').textContent = district;
+      document.getElementById('rmandal').textContent = mandal || '-';
+      const tbody = document.querySelector('#tbl tbody'); tbody.innerHTML = '';
+      (data.rows || []).forEach((r,i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${i+1}</td><td>${escapeHtml(r.name)}</td><td>${escapeHtml(r.status)}</td><td>${escapeHtml(r.time||'-')}</td><td>${escapeHtml(r.date||'')}</td>`;
+        tbody.appendChild(tr);
+      });
+      msg.classList.add('hidden');
+    }
+
+    document.getElementById('btnBack').addEventListener('click', () => {
+      reportArea.classList.add('hidden'); loginBox.classList.remove('hidden'); msg.classList.add('hidden');
+    });
+
+    function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  </script>
+</body>
+</html>
