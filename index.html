@@ -78,7 +78,8 @@
       showMsg('Loading...');
 
       // ===== REPLACE WITH YOUR RENDER URL =====
-      const apiUrl = `https://manareports-demo.onrender.com/api/report?uid=${encodeURIComponent(uid)}&district=${encodeURIComponent(district)}&mandal=${encodeURIComponent(mandal)}`;
+      // Replace previous apiUrl line with this (exactly)
+const apiUrl = `https://manareports-demo.onrender.com/api/report?uid=${encodeURIComponent(uid)}&district=${encodeURIComponent(district)}&mandal=${encodeURIComponent(mandal)}`;
 
       try {
         const resp = await fetch(apiUrl);
