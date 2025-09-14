@@ -25,23 +25,93 @@
     <label>Unique ID (Person / Report ID)</label>
     <input id="uid" placeholder="ఉదాహরণ: P1234" />
 
-    <div class="row">
-      <div>
-        <label>District</label>
-        <select id="district">
-          <option value="">-- ఎంచుకోండి --</option>
-          <option value="Srikakulam">Srikakulam</option>
-          <option value="Vizianagaram">Vizianagaram</option>
-          <option value="Visakhapatnam">Visakhapatnam</option>
-          <option value="Khammam">Khammam</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-      <div>
-        <label>Mandal</label>
-        <input id="mandal" placeholder="Mandal (optional)" />
-      </div>
-    </div>
+   <div class="row">
+  <div>
+    <label>District</label>
+    <select id="district">
+      <option value="">-- జిల్లా ఎంచుకోండి --</option>
+      <option value="Adilabad">Adilabad</option>
+      <option value="Bhadradri Kothagudem">Bhadradri Kothagudem</option>
+      <option value="Hyderabad">Hyderabad</option>
+      <option value="Jagtial">Jagtial</option>
+      <option value="Jangaon">Jangaon</option>
+      <option value="Jayashankar Bhupalpally">Jayashankar Bhupalpally</option>
+      <option value="Jogulamba Gadwal">Jogulamba Gadwal</option>
+      <option value="Kamareddy">Kamareddy</option>
+      <option value="Karimnagar">Karimnagar</option>
+      <option value="Khammam">Khammam</option>
+      <option value="Komaram Bheem Asifabad">Komaram Bheem Asifabad</option>
+      <option value="Mahabubabad">Mahabubabad</option>
+      <option value="Mahabubnagar">Mahabubnagar</option>
+      <option value="Mancherial">Mancherial</option>
+      <option value="Medak">Medak</option>
+      <option value="Medchal-Malkajgiri">Medchal-Malkajgiri</option>
+      <option value="Mulugu">Mulugu</option>
+      <option value="Nagarkurnool">Nagarkurnool</option>
+      <option value="Nalgonda">Nalgonda</option>
+      <option value="Narayanpet">Narayanpet</option>
+      <option value="Nirmal">Nirmal</option>
+      <option value="Nizamabad">Nizamabad</option>
+      <option value="Peddapalli">Peddapalli</option>
+      <option value="Rajanna Sircilla">Rajanna Sircilla</option>
+      <option value="Ranga Reddy">Ranga Reddy</option>
+      <option value="Sangareddy">Sangareddy</option>
+      <option value="Siddipet">Siddipet</option>
+      <option value="Suryapet">Suryapet</option>
+      <option value="Vikarabad">Vikarabad</option>
+      <option value="Wanaparthy">Wanaparthy</option>
+      <option value="Warangal Urban">Warangal Urban</option>
+      <option value="Warangal Rural">Warangal Rural</option>
+      <option value="Yadadri Bhuvanagiri">Yadadri Bhuvanagiri</option>
+    </select>
+  </div>
+
+  <div>
+    <label>Mandal</label>
+    <select id="mandalSelect">
+      <option value="">-- ముందుగా జిల్లా ఎంచుకోండి --</option>
+    </select>
+  </div>
+</div>
+
+<script>
+  // Telangana Districts కి sample Mandals
+  const mandalsByDistrict = {
+    "Hyderabad": ["Secunderabad", "Charminar", "Gachibowli", "Shamirpet"],
+    "Khammam": ["Khammam Urban", "Palair", "Yellandu"],
+    "Warangal Urban": ["Hanamkonda", "Kazipet", "Warangal"],
+    "Warangal Rural": ["Wardhannapet", "Narsampet", "Parvathagiri"],
+    "Karimnagar": ["Karimnagar Urban", "Huzurabad", "Choppadandi"],
+    "Nizamabad": ["Nizamabad", "Bheemgal", "Yellareddy"],
+    "Adilabad": ["Adilabad Urban", "Gudihatnoor", "Mavala"]
+    // 👉 మిగతా జిల్లాలకు కూడా మీరు Mandal names జోడించాలి
+  };
+
+  const districtEl = document.getElementById('district');
+  const mandalEl = document.getElementById('mandalSelect');
+
+  districtEl.addEventListener('change', () => {
+    const d = districtEl.value;
+    mandalEl.innerHTML = '';
+    if (!d) {
+      mandalEl.innerHTML = '<option value="">-- ముందుగా జిల్లా ఎంచుకోండి --</option>';
+      return;
+    }
+    const mandals = mandalsByDistrict[d] || [];
+    if (mandals.length === 0) {
+      mandalEl.innerHTML = '<option value="">-- Mandals లభ్యం కావు --</option>';
+      return;
+    }
+    mandalEl.innerHTML = '<option value="">-- మండలం ఎంచుకోండి --</option>';
+    mandals.forEach(m => {
+      const o = document.createElement('option');
+      o.value = m;
+      o.textContent = m;
+      mandalEl.appendChild(o);
+    });
+  });
+</script>
+
 
     <button id="btnLogin" style="margin-top:12px">Login / Fetch Report</button>
     <div id="msg" class="notice hidden"></div>
