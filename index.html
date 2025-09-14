@@ -27,7 +27,7 @@
 
    <div class="row">
   <div>
-    <label>District</label>
+    <label>District (జిల్లా)</label>
     <select id="district">
       <option value="">-- జిల్లా ఎంచుకోండి --</option>
       <option value="Adilabad">Adilabad</option>
@@ -67,15 +67,15 @@
   </div>
 
   <div>
-    <label>Mandal</label>
+    <label>Mandal (మండల్)</label>
     <select id="mandalSelect">
       <option value="">-- ముందుగా జిల్లా ఎంచుకోండి --</option>
     </select>
   </div>
 </div>
 <script>
-  // Telangana Districts కి sample Mandals
-  const mandalsByDistrict = {
+  // Telangana District (జిల్లా)s కి sample Mandal (మండల్)s
+  const mandalsByDistrict (జిల్లా) = {
     "Hyderabad": ["Secunderabad", "Charminar", "Gachibowli", "Shamirpet"],
     "Khammam": ["Khammam Urban", "Palair", "Yellandu"],
     "Warangal Urban": ["Hanamkonda", "Kazipet", "Warangal"],
@@ -83,7 +83,7 @@
     "Karimnagar": ["Karimnagar Urban", "Huzurabad", "Choppadandi"],
     "Nizamabad": ["Nizamabad", "Bheemgal", "Yellareddy"],
     "Adilabad": ["Adilabad Urban", "Gudihatnoor", "Mavala"]
-    // 👉 మిగతా జిల్లాలకు కూడా మీరు Mandal names జోడించాలి
+    // 👉 మిగతా జిల్లాలకు కూడా మీరు Mandal (మండల్) names జోడించాలి
   };
 
   const districtEl = document.getElementById('district');
@@ -96,9 +96,9 @@
       mandalEl.innerHTML = '<option value="">-- ముందుగా జిల్లా ఎంచుకోండి --</option>';
       return;
     }
-    const mandals = mandalsByDistrict[d] || [];
+    const mandals = mandalsByDistrict (జిల్లా)[d] || [];
     if (mandals.length === 0) {
-      mandalEl.innerHTML = '<option value="">-- Mandals లభ్యం కావు --</option>';
+      mandalEl.innerHTML = '<option value="">-- Mandal (మండల్)s లభ్యం కావు --</option>';
       return;
     }
     mandalEl.innerHTML = '<option value="">-- మండలం ఎంచుకోండి --</option>';
@@ -118,7 +118,7 @@
 
   <div id="reportArea" class="hidden">
     <h2>Report for <span id="rid"></span></h2>
-    <p><strong>District:</strong> <span id="rdistrict"></span> &nbsp; <strong>Mandal:</strong> <span id="rmandal"></span></p>
+    <p><strong>District (జిల్లా):</strong> <span id="rdistrict"></span> &nbsp; <strong>Mandal (మండల్):</strong> <span id="rmandal"></span></p>
 
     <table id="tbl">
       <thead>
@@ -142,8 +142,8 @@
       // use mandalSelect id (fixed)
       const mandal = document.getElementById('mandalSelect').value.trim();
 
-      if (!uid) { showMsg('దయచేసి Unique ID పెట్టండి'); return; }
-      if (!district) { showMsg('దయచేసి District ఎంచుకోండి'); return; }
+      if (!uid) { showMsg('దయచేసి DPO/MPO పెట్టండి'); return; }
+      if (!district) { showMsg('దయచేసి District (జిల్లా) ఎంచుకోండి'); return; }
 
       showMsg('Loading...');
 
