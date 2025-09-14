@@ -23,7 +23,7 @@
 
   <div id="loginBox">
     <label>Unique ID (Person / Report ID)</label>
-    <input id="uid" placeholder="ఉదాహরণ: P1234" />
+    <input id="uid" placeholder="ఉదాహరణ: P1234" />
 
    <div class="row">
   <div>
@@ -140,7 +140,8 @@
     btn.addEventListener('click', async () => {
       const uid = document.getElementById('uid').value.trim();
       const district = document.getElementById('district').value;
-      const mandal = document.getElementById('mandal').value.trim();
+      // use mandalSelect id (fixed)
+      const mandal = document.getElementById('mandalSelect').value.trim();
 
       if (!uid) { showMsg('దయచేసి Unique ID పెట్టండి'); return; }
       if (!district) { showMsg('దయచేసి District ఎంచుకోండి'); return; }
@@ -148,7 +149,6 @@
       showMsg('Loading...');
 
       // ===== REPLACE WITH YOUR RENDER URL =====
-      // Replace previous apiUrl line with this (exactly)
 const apiUrl = `https://manareports-demo.onrender.com/api/report?uid=${encodeURIComponent(uid)}&district=${encodeURIComponent(district)}&mandal=${encodeURIComponent(mandal)}`;
 
       try {
@@ -157,8 +157,10 @@ const apiUrl = `https://manareports-demo.onrender.com/api/report?uid=${encodeURI
           const data = await resp.json();
           showReport(uid, district, mandal, data);
           return;
+        } else {
+          console.error('API error', resp.status);
         }
-      } catch (e) { /* ignore and fallback */ }
+      } catch (e) { console.error('Fetch error', e); }
 
       // fallback mock
       const mock = {
